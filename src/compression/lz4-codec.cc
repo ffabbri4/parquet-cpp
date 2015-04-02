@@ -20,9 +20,9 @@ using namespace parquet_cpp;
 
 void Lz4Codec::Decompress(int input_len, const uint8_t* input,
       int output_len, uint8_t* output_buffer) {
-  int n = LZ4_uncompress(reinterpret_cast<const char*>(input),
-      reinterpret_cast<char*>(output_buffer), output_len);
-  if (n != input_len) {
+  int n = LZ4_decompress_safe(reinterpret_cast<const char*>(input),
+                              reinterpret_cast<char*>(output_buffer), input_len, output_len);
+  if (n < 0 ) {
     throw ParquetException("Corrupt lz4 compressed data.");
   }
 }
